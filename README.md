@@ -20,9 +20,10 @@ When the reader has completed this Code Pattern, they will understand how to:
 ## Flow
 
 1. The developer creates a Jupyter Notebook on ICP4D.
-2. The Jupyter Notebook is connected to a DB2 database, which is used to store Watson OpenScale data.
+2. OpenScale on ICP4D is connected to a DB2 database, which is used to store Watson OpenScale data.
 3. The notebook is connected to Watson Machine Learning and a model is trained and deployed.
 4. Watson OpenScale is used by the notebook to log payload and monitor performance, quality, and fairness.
+5. OpenScale will monitor the Watson Machine Learning model for performance, fairness, quality, and explainiblity.
 
 ## Prerequisites
 
