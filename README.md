@@ -1,6 +1,6 @@
 # Monitor IBM Cloud Pak With Watson OpenScale
 
-In this Code Pattern, we will use German Credit data to train, create, and deploy a machine learning model using [Watson Machine Learning](https://www.ibm.com/support/producthub/icpdata/docs/content/SSQNUZ_current/com.ibm.icpdata.doc/dsx/wmlservices.html) on Cloud Pak for Data (CP4D). We will create a data mart for this model with [Watson OpenScale](https://www.ibm.com/cloud/watson-openscale/) and configure OpenScale to monitor that deployment, then inject seven days' worth of historical records and measurements for viewing in the OpenScale Insights dashboard.
+In this Code Pattern, we will use German Credit data to train, create, and deploy a machine learning model using [Watson Machine Learning](https://www.ibm.com/cloud/machine-learning/) on [Cloud Pak for Data (CP4D)](https://www.ibm.com/analytics/cloud-pak-for-data). We will create a data mart for this model with [Watson OpenScale](https://www.ibm.com/cloud/watson-openscale/) and configure OpenScale to monitor that deployment, then inject seven days' worth of historical records and measurements for viewing in the OpenScale Insights dashboard.
 
 When the reader has completed this Code Pattern, they will understand how to:
 
@@ -19,23 +19,28 @@ When the reader has completed this Code Pattern, they will understand how to:
 
 ## Flow
 
-1. The developer creates a Jupyter Notebook on ICP4D.
-2. OpenScale on ICP4D is connected to a DB2 database, which is used to store Watson OpenScale data.
-3. The notebook is connected to Watson Machine Learning and a model is trained and deployed.
-4. Watson OpenScale is used by the notebook to log payload and monitor performance, quality, and fairness.
-5. OpenScale will monitor the Watson Machine Learning model for performance, fairness, quality, and explainiblity.
+1. Create a new project on ICP4D
+1. The developer creates a Jupyter Notebook within this project.
+1. OpenScale on ICP4D is connected to a DB2 database, which is used to store Watson OpenScale data.
+1. The notebook is connected to Watson Machine Learning and a model is trained and deployed.
+1. Watson OpenScale is used by the notebook to log payload and monitor performance, quality, and fairness.
+1. OpenScale will monitor the Watson Machine Learning model for performance, fairness, quality, and explainiblity.
 
 ## Prerequisites
 
 * [IBM Cloud Pak for Data](https://www.ibm.com/analytics/cloud-pak-for-data)
-* [Watson OpenScale Add-on installed for ICP4D](https://www.ibm.com/support/producthub/icpdata/docs/content/SSQNUZ_current/com.ibm.icpdata.doc/zen/admin/add-ons.html#add-ons__ai)
+* [Watson OpenScale Add-on installed for ICP4D](https://www.ibm.com/support/producthub/icpdata/docs/content/SSQNUZ_current/cpd/svc/openscale/openscale-overview.html)
 * [Watson OpenScale configured for ICP4D](https://cloud.ibm.com/docs/services/ai-openscale-icp?topic=ai-openscale-icp-gs-get-started)
+* [Watson Machine Learning Add On for Cloud Pak for Data](https://www.ibm.com/support/producthub/icpdata/docs/content/SSQNUZ_current/wsj/analyze-data/ml-install-overview.html)
+* [Create an IBM Cloud instance of DB2 Warehouse](https://developer.ibm.com/tutorials/virtualizing-db2-warehouse-data-with-data-virtualization/)
+
 
 # Steps
 
 1. [Clone the repository](#1-clone-the-repository)
-1. [Configure OpenScale in a Jupyter Notebook](#2-configure-openscale-in-a-jupyter-notebook)
-1. [Utilize the dashboard for OpenScale](#3-utilize-the-dashboard-for-openscale)
+1. [Create a new project and deployment space](#2-create-a-new-project-and-deployment-space)
+1. [Configure OpenScale in a Jupyter Notebook](#3-configure-openscale-in-a-jupyter-notebook)
+1. [Utilize the dashboard for OpenScale](#4-utilize-the-dashboard-for-openscale)
 
 ## 1. Clone the repository
 
@@ -46,7 +51,61 @@ git clone https://github.com/IBM/monitor-ibm-cloud-pak-with-watson-openscale
 cd monitor-ibm-cloud-pak-with-watson-openscale
 ```
 
-## 2. Configure OpenScale in a Jupyter Notebook
+## 2. Create a new project and deployment space
+### Create a New project
+
+In Cloud Pak for Data, we use the concept of a project to collect / organize the resources used to achieve a particular goal (resources to build a solution to a problem). Your project resources can include data, collaborators, and analytic assets like notebooks and models, etc.
+
+* Go the (☰) menu and click *Projects*
+
+![(☰) Menu -> Projects](doc/source/images/cpd-projects-menu.png)
+
+* Click on *New project*
+
+![Start a new project](doc/source/images/cpd-new-project.png)
+
+* We are going to create an empty, as opposed to creating a  project from an existing file. Select the _*Create an empty project*_ option:
+
+![Create project from file](doc/source/images/cpd-create-empty-project.png)
+
+* Give the project a name and click `Create`:
+
+![Browse for project files](doc/source/images/cpd-new-project-create.png)
+
+### Create a Deployment Space
+
+Cloud Pak for Data uses the concept of `Deployment Spaces` to configure and manage the deployment of a set of related deployable assets. These assets can be data files, machine learning models, etc.
+
+* Go the (☰) menu and click `Analyze` -> `Analytics deployments`:
+
+![(☰) Menu -> Analytics deployments](doc/source/images/ChooseAnalyticsDeployments.png)
+
+* Click on `+ New deployment space`:
+
+![Add New deployment space](doc/source/images/addNewDeploymentSpace.png)
+
+* Give your deployment space a unique name, optional description, then click `Create`. You will use this space later when you deploy a machine learning model.
+
+* Next, we will add a collaborator to the new deployment space, so that assets we deploy can be monitored in step 4.
+
+* Click on your new deployment space.
+
+![Select deployment space](doc/source/images/selectNewDeploymentSpace.png)
+
+* Click on the `Access control` tab and then click on `Add collaborators` on the right.
+
+![Deployment space access control](doc/source/images/deploymentSpaceAccessControl.png)
+
+* Enter "admin" as a Collaborator and select the user from the drop down list. Then click on the `Add to list` button.
+
+> **NOTE:** We are adding the user that configured the machine learning instance for OpenScale monitoring. In this case, the user is the admin user.
+
+![Deployment space collaborators](doc/source/images/deploymentSpaceAddCollaborator.png)
+
+* Click the `Add` button to finish adding the collaborator. You should be brought back to the deployment space page and see your user ID along with the `Admin` user as collaborators for this space.
+
+
+## 3. Configure OpenScale in a Jupyter Notebook
 
 For this part of the pattern we're going to configure our Watson OpenScale service by running a Jupyter Notebook.
 
@@ -83,7 +142,7 @@ Spend an minute looking through the sections of the notebook to get an overview.
 
 Under `8.9 Identify transactions for Explainability` run the cell. It will produce a series of UIDs for indidvidual ML scoring transactions. Copy one or more of them to examine in the next section.
 
-## 3. Utilize the dashboard for Openscale
+## 4. Utilize the dashboard for Openscale
 
 Now that you have created a machine learning model and configured Openscale, you can utilize the OpenScale dashboard to gather insights.
 
