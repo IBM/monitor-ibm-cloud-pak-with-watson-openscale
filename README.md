@@ -99,7 +99,7 @@ Next, we will add a collaborator to the new deployment space, so that assets we 
 
 * Enter "admin" as a Collaborator and select the user from the drop down list. Then click on the `Add to list` button.
 
-> **NOTE:** We are adding the user that configured the machine learning instance for OpenScale monitoring. In this case, the user is the admin user.
+> **NOTE:** We are adding the user that configured the machine learning instance for OpenScale monitoring. In this case, the user is the admin user. If the user is someone other than Admin, then that user should be added as a collaborator here
 
 ![Deployment space collaborators](doc/source/images/deploymentSpaceAddCollaborator.png)
 
