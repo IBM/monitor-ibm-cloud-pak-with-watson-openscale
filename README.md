@@ -64,7 +64,7 @@ In Cloud Pak for Data, we use the concept of a project to collect / organize the
 
 ![Start a new project](doc/source/images/cpd-new-project.png)
 
-* We are going to create an empty, as opposed to creating a  project from an existing file. Select the _*Create an empty project*_ option:
+* We are going to create an empty project, as opposed to creating one from an existing file. Select the _*Create an empty project*_ option:
 
 ![Create project from file](doc/source/images/cpd-create-empty-project.png)
 
@@ -86,7 +86,8 @@ Cloud Pak for Data uses the concept of `Deployment Spaces` to configure and mana
 
 * Give your deployment space a unique name, optional description, then click `Create`. You will use this space later when you deploy a machine learning model.
 
-* Next, we will add a collaborator to the new deployment space, so that assets we deploy can be monitored in step 4.
+#### Add collaborator
+Next, we will add a collaborator to the new deployment space, so that assets we deploy can be monitored in step 4.
 
 * Click on your new deployment space.
 
@@ -130,13 +131,14 @@ When the Jupyter notebook is loaded and the kernel is ready then we can start ex
 ### Update credentials
 
 * In the notebook section 1.2 you will add your ICP platform credentials.
-* For the `url` field, change `https://w.x.y.z:31843` to use the IP address of your ICP cluster. Make sure you have the port appended `31843`.
+* For the `url` field, change `https://w.x.y.z:31843` to use the IP address of your ICP cluster. 
 * For the `username`, use your login username.
 * For the `password`, user your login password.
+* For the `DATABASE_CREDENTIALS` and `SCHEMA_NAME` values, follow instructions from prerequisites to *Create an IBM Cloud instance of DB2 Warehouse*
 
 ### Run the notebook
 
-Spend an minute looking through the sections of the notebook to get an overview. You will run cells individually by highlighting each cell, then either click the `Run` button at the top of the notebook. While the cell is running, an asterisk (`[*]`) will show up to the left of the cell. When that cell has finished executing a sequential number will show up (i.e. `[17]`).
+Spend an minute looking through the sections of the notebook to get an overview. You will run cells individually by highlighting each cell, then either click the `Run` button at the top of the notebook. While the cell is running, an asterisk (`[*]`) will show up to the left of the cell. When that cell has finished executing a sequential number will show up (for example, `[17]`).
 
 ### Get transactions for Explainability
 
@@ -148,54 +150,84 @@ Now that you have created a machine learning model and configured Openscale, you
 
 ### Use the insights dashboard
 
-Click on the left-hand menu icon for `Insights`, then choose the tile for your configured model (or the 3-dot menu on the tile and then `View Details`:
+The *Insights Dashboard* provides an overview of the models that OpenScale is monitoring.
+
+* Open the `Services` tab by clicking the icon in the upper right. Go to the `OpenScale` tile under the `AI` category and click `Open`:
+
+![Deploy OpenScale](doc/source/images/aios-deploy-service.png)
+
+OpenScale will begin with the *Insights Dashboard*. This can contain tiles for many configured monitors. 
+
+* Click on the left-hand menu icon for `Insights`, make sure that you are on the `Model monitors` tab, and then choose the tile for the `GermanCreditRiskModelICP` model (or the 3-dot menu on the tile and then `View Details`:
 
 ![OpenScale Insight Dashboard Tile Open](doc/source/images/OpenScaleInsightDashTileOpen.png)
 
-You can see the top monitor highlighted, for the feature `Sex`.
+You will see the triangle with `!` under `Fairness` -> `Sex`. This indicates that there has been an alert for the `Fairness` monitor. Alerts are configurable, based on thresholds for fairness outcomes which can be set and altered as desired.
 
-By moving your mouse pointer over the graph, you can see the values change, and which contains bias. Click one spot to veiw the details. Later, we'll click `Configure Monitors` to get a Fairness endpoint:
+* By moving your mouse pointer over the graph, you can see the values change, and which contains bias. Click one spot to veiw the details. Later, we'll click `Configure Monitors` to get a Fairness endpoint:
 
 ![OpenScale Fairness Monitor](doc/source/images/OpenScaleFairnessMonitor.png)
 
-Once you open the details page, you can see more information:
+* Once you open the details page, you can see more information. Note that you can choose the radio buttons for your choice of data (Payload + Perturbed, Payload, Training, Debiased):
 
 ![OpenScale Fairness Detail](doc/source/images/OpenScaleFairnessDetail.png)
 
-Click on `View Transactions` to drill deeper:
+* Click on `View Transactions` to drill deeper. Here you have radio buttons for *All transactions* and *Biased transactions*. Each of the individual transactions can be examined to see them in detail. Doing so will cache that transaction, as we will see later. 
 
 ![OpenScale View Transactions](doc/source/images/OpenScaleFairnessViewTransactions.png)
 
-Now, go back to the top-level page when you click the Monitor Deployment tile and click `Configure Monitors`. Click the `Fairness` menu, then the `Debias Endpoint` tab:
+* Now, go back to the *Insights Dashboard* page by clicking on the left-hand menu icon for `Insights`, make sure that you are on the `Model monitors` tab, and click the 3-dot menu on the tile and then `Configure monitors`:
+
+![OpenScale Configure Monitors](doc/source/images/OpenScaleConfigureMonitors.png)
+
+* Click the `Fairness` menu, then the `Debias Endpoint` tab. This is the REST endpoint that offers a debiased version of the credit risk ML model, based on the features that were configured (i.e. Sex and Age). It will present an inference, or score, that attempts to remove the bias that has been detected:
 
 ![OpenScale Monitors Fairness](doc/source/images/OpenScaleMonitorFairness.png)
 
-Then scroll down for code examples on how to use the Fairness Debiased endpoint:
+* Then scroll down for code examples on how to use the Fairness Debiased endpoint. You can see code snippets using cURL, Java, and Python, which can be used in your scripts or applications to access this debiased endpoint:
 
 ![OpenScale Debiased endpoint](doc/source/images/OpenScaleDebiasedEndpoint.png)
 
-Similarly, you can choose the `Quality` menu and choose the `Feedback` tab to get code for Feedback Logging.
+* Similarly, you can choose the `Quality` menu and choose the `Feedback` tab to get code for Feedback Logging. This provides an endpoint for sending fresh test data for ongoing quality evaluation. You can upload feedback data here or work with your developer to integrate the code snippet provided to publish feedback data to your Watson OpenScale database.
 
 ### Examine an individual transaction
 
-Click on the left-hand menu icon for `Explain a transaction` and enter the transaction UID you copied previously into the search bar.
+* Click on the left-hand menu icon for `Explain a transaction` and click one of the transactions that have been run. These are the transactions that have been cached. Alternately, enter the transaction UID you copied after running  the notebook from [step 3.](#3-configure-openscale-in-a-jupyter-notebook) 
+
+> NOTE: Each time you create the Explainibility data, the perterbation algorithm is sending 1000's of requests to the deployed Machine Learning REST endpoint, so the first time this is done can take a few seconds.
 
 ![Explain a transaction](doc/source/images/OpenScaleExplainTransaction.png)
 
-From the info icon next to `Details`:
-"Explanations show the most significant factors when determining an outcome. Classification models also include advanced explanations. Advanced explanations are not available for regression, image, and unstructured text models."
+* From the info icon next to `Details`:
 
-Click on the info icon next to `Minimum changes for No Risk outcome` and look at the feature values:
-"Pertinent Negative
-If the feature values were set to these values, the prediction would change. This is the minimum set of changes in feature values to generate a different prediction. Each feature value is changed so that it moves towards its median value in the training data."
+*Explanations show the most significant factors when determining an outcome. Classification models also include advanced explanations. Advanced explanations are not available for regression, image, and unstructured text models.*
 
-Click on the info icon next to `Maximum changes allowed for the same outcome` and look at the feature values:
-"Pertinent Positive
-The prediction will not change even if the feature values are set to these values. This is the maximum change allowed while maintaining the existing prediction. Each feature value is changed so that it moves towards its median value in the training data."
+* Click on the info icon next to `Minimum changes for No Risk outcome` and look at the feature values:
+
+*Pertinent Negative
+If the feature values were set to these values, the prediction would change. This is the minimum set of changes in feature values to generate a different prediction. Each feature value is changed so that it moves towards its median value in the training data.*
+
+* Click on the info icon next to `Maximum changes allowed for the same outcome` and look at the feature values:
+
+*Pertinent Positive
+The prediction will not change even if the feature values are set to these values. This is the maximum change allowed while maintaining the existing prediction. Each feature value is changed so that it moves towards its median value in the training data.*
 
 You can see under `Most important factors influencing prediction` the Feature, Value, and Weight of the most important factors for this score.
 
 A full breakdown of the factors contributing to either "Risk" or "No Risk" are at the bottom.
+
+### Using the Analytics tools
+
+* From the model monitor view, click on `Analytics` -> `Chart Builder`. Here you can create charts using various Measurements, Features, and Dimensions of your machine learning model. Change them and examine the charts that are created:
+
+![Analytics Chart builder](doc/source/images/aios-dashboard-chart-builder.png)
+
+* You can also see a chart that breaks down *Predictions by Confidence*:
+
+![Analytics Predictions by Confidence](doc/source/images/aios-analytics-predictions-confidence.png)
+
+
+> NOTE: Returning to the Cloud Pak for Data requires altering the URL in the browser, so that the cluster name is the only thing present. Remove anything in the browser URL containing `/aiopenscale/*`.
 
 # License
 [Apache 2.0](LICENSE)
