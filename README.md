@@ -29,10 +29,10 @@ When the reader has completed this Code Pattern, they will understand how to:
 ## Prerequisites
 
 * [IBM Cloud Pak for Data](https://www.ibm.com/analytics/cloud-pak-for-data)
-* [Watson OpenScale Add-on installed for ICP4D](https://www.ibm.com/support/producthub/icpdata/docs/content/SSQNUZ_current/cpd/svc/openscale/openscale-overview.html)
+* [Watson OpenScale Add-on installed for ICP4D](https://www.ibm.com/support/producthub/icpdata/docs/content/SSQNUZ_current/svc-welcome/aiopenscale.html)
 * [Watson OpenScale configured for ICP4D](https://cloud.ibm.com/docs/services/ai-openscale-icp?topic=ai-openscale-icp-gs-get-started)
 * [Watson Machine Learning Add On for Cloud Pak for Data](https://www.ibm.com/support/producthub/icpdata/docs/content/SSQNUZ_current/wsj/analyze-data/ml-install-overview.html)
-* [Create an IBM Cloud instance of DB2 Warehouse](https://developer.ibm.com/tutorials/virtualizing-db2-warehouse-data-with-data-virtualization/)
+* [Create an IBM Cloud instance of DB2 Warehouse](https://developer.ibm.com/tutorials/virtualizing-db2-warehouse-data-with-data-virtualization/#step-4-set-up-the-db2-warehouse-on-ibm-cloud)
 
 
 # Steps
@@ -52,25 +52,28 @@ cd monitor-ibm-cloud-pak-with-watson-openscale
 ```
 
 ## 2. Create a new project and deployment space
-### Create a New project
+
+### Create a new project
 
 In Cloud Pak for Data, we use the concept of a project to collect / organize the resources used to achieve a particular goal (resources to build a solution to a problem). Your project resources can include data, collaborators, and analytic assets like notebooks and models, etc.
 
-* Go the (☰) menu and click *Projects*
+* Launch a browser and navigate to your Cloud Pak for Data deployment.
+
+* Go the (☰) menu and click *Projects*:
 
 ![(☰) Menu -> Projects](doc/source/images/cpd-projects-menu.png)
 
-* Click on *New project*
+* Click on *New project*. In the dialog that pops up, select the project type as `Analytics project` and click `Next`:
 
 ![Start a new project](doc/source/images/cpd-new-project.png)
 
-* We are going to create an empty project, as opposed to creating one from an existing file. Select the _*Create an empty project*_ option:
+* Click on the top tile for `Create an empty project`:
 
-![Create project from file](doc/source/images/cpd-create-empty-project.png)
+![Create an empty project](doc/source/images/cpd-create-empty-project.png)
 
-* Give the project a name and click `Create`:
+* Give the project a unique name, an optional description and click `Create`:
 
-![Browse for project files](doc/source/images/cpd-new-project-create.png)
+![Pick a name](doc/source/images/cpd-new-project-create.png)
 
 ### Create a Deployment Space
 
@@ -80,31 +83,41 @@ Cloud Pak for Data uses the concept of `Deployment Spaces` to configure and mana
 
 ![(☰) Menu -> Analytics deployments](doc/source/images/ChooseAnalyticsDeployments.png)
 
-* Click on `+ New deployment space`:
+* Click on `New deployment space +`:
 
 ![Add New deployment space](doc/source/images/addNewDeploymentSpace.png)
 
-* Give your deployment space a unique name, optional description, then click `Create`. You will use this space later when you deploy a machine learning model.
+* Click on the top tile for 'Create an empty space':
 
-#### Add collaborator
+![Create empty deployment space](doc/source/images/createEmptyDeploymentSpace.png)
+
+* Give your deployment space a unique name, an optional description, then click `Create`.
+
+![Create New deployment space](doc/source/images/createNewDeploymentSpace.png)
+
+You will use this space later when you deploy a machine learning model.
+
+### Add collaborator
+
 Next, we will add a collaborator to the new deployment space, so that assets we deploy can be monitored in step 4.
 
 * Click on your new deployment space.
 
 ![Select deployment space](doc/source/images/selectNewDeploymentSpace.png)
 
-* Click on the `Access control` tab and then click on `Add collaborators` on the right.
+* Click on the `Access control` tab and then click on `Add collaborators +` on the right.
 
 ![Deployment space access control](doc/source/images/deploymentSpaceAccessControl.png)
 
-* Enter "admin" as a Collaborator and select the user from the drop down list. Then click on the `Add to list` button.
+* Enter "admin" as a Collaborator and select the user from the drop down list. Then click on the `Add to list +` button. Then click the `Add` button to finish adding the collaborator.
 
-> **NOTE:** We are adding the user that configured the machine learning instance for OpenScale monitoring. In this case, the user is the admin user. If the user is someone other than Admin, then that user should be added as a collaborator here
+> **NOTE:** We are adding the user that configured the machine learning instance for OpenScale monitoring. In this case, the user is the admin user. If the user is someone other than "admin", then that user should be added as a collaborator here.
 
-![Deployment space collaborators](doc/source/images/deploymentSpaceAddCollaborator.png)
+![Deployment space add collaborator](doc/source/images/deploymentSpaceAddCollaborator.png)
 
-* Click the `Add` button to finish adding the collaborator. You should be brought back to the deployment space page and see your user ID along with the `Admin` user as collaborators for this space.
+You should be brought back to the deployment space page and see your user ID along with the `admin` user as collaborators for this space.
 
+![Deployment space collaborators](doc/source/images/deploymentSpaceCollaborators.png)
 
 ## 3. Configure OpenScale in a Jupyter Notebook
 
