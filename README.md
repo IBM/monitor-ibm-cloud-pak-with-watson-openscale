@@ -125,17 +125,15 @@ For this part of the pattern we're going to configure our Watson OpenScale servi
 
 ### Import the notebook
 
-At the project overview, either click the *New Asset* button [1], and choose *Add notebook* or go to the *Notebooks* tab [2] and choose *+ Add notebook* [3].
+At the project overview click the Add to project button, and choose Notebook or click New notebook option next to the Notebooks section.
 
 ![Add a new asset](doc/source/images/wml-1-add-asset.png)
 
-On the next panel select the *From URL* tab [1] and give your notebook a name [2].
+On the next panel select the From URL tab, give your notebook a name, provide the following URL, and choose the Python 3.6 environment:
 
-Provide the notebook URL [https://raw.githubusercontent.com/IBM/monitor-ibm-cloud-pak-with-watson-openscale/master/notebooks/ConfigureOpenScale.ipynb](https://raw.githubusercontent.com/IBM/monitor-ibm-cloud-pak-with-watson-openscale/master/notebooks/ConfigureOpenScale.ipynb) [3].
+Provide the notebook URL [https://raw.githubusercontent.com/IBM/monitor-ibm-cloud-pak-with-watson-openscale/master/notebooks/ConfigureOpenScale.ipynb](https://raw.githubusercontent.com/IBM/monitor-ibm-cloud-pak-with-watson-openscale/master/notebooks/ConfigureOpenScale.ipynb).
 
-Choose a Python 3.x environment [4], then click *Create* [5].
-
-![Add notebook name and URL](doc/source/images/wml-2-add-name-and-url.png)
+![Add notebook name and URL](doc/source/images/wml-2-add-name-and-url.png) and click `Create notebook`.
 
 When the Jupyter notebook is loaded and the kernel is ready then we can start executing cells.
 
@@ -143,15 +141,19 @@ When the Jupyter notebook is loaded and the kernel is ready then we can start ex
 
 ### Update credentials
 
-* In the notebook section 1.2 you will add your ICP platform credentials.
-* For the `url` field, change `https://w.x.y.z:31843` to use the IP address of your ICP cluster. 
+* In the notebook section 1.2 you will add your ICP platform credentials for the `WOS_CREDENTIALS`.
+* For the `url` field, change `https://w.x.y.z` to use the IP address of your ICP cluster, i.e something like: "url": "https://zen-cpd-zen.omid-cp4d-v5-2bef1f4b4097001da9502000c44fc2b2-0001.us-south.containers.appdomain.cloud"
 * For the `username`, use your login username.
 * For the `password`, user your login password.
 * For the `DATABASE_CREDENTIALS` and `SCHEMA_NAME` values, follow instructions from prerequisites to *Create an IBM Cloud instance of DB2 Warehouse*
 
 ### Run the notebook
 
-Spend an minute looking through the sections of the notebook to get an overview. You will run cells individually by highlighting each cell, then either click the `Run` button at the top of the notebook. While the cell is running, an asterisk (`[*]`) will show up to the left of the cell. When that cell has finished executing a sequential number will show up (for example, `[17]`).
+Important: Make sure that you stop the kernel of your notebook(s) when you are done, in order to prevent leaking of memory resources!
+
+![Stop kernel](doc/source/images/JupyterStopKernel.png)
+
+Spend a minute looking through the sections of the notebook to get an overview. You will run cells individually by highlighting each cell, then either click the `Run` button at the top of the notebook. While the cell is running, an asterisk (`[*]`) will show up to the left of the cell. When that cell has finished executing a sequential number will show up (for example, `[17]`).
 
 ### Get transactions for Explainability
 
@@ -169,15 +171,15 @@ The *Insights Dashboard* provides an overview of the models that OpenScale is mo
 
 ![Deploy OpenScale](doc/source/images/aios-deploy-service.png)
 
-OpenScale will begin with the *Insights Dashboard*. This can contain tiles for many configured monitors. 
-
-* Click on the left-hand menu icon for `Insights`, make sure that you are on the `Model monitors` tab, and then choose the tile for the `GermanCreditRiskModelICP` model (or the 3-dot menu on the tile and then `View Details`:
+* When the dashboard loads, Click on the 'Model Monitors'  tab and you will see the one deployment you configured in the previous section.
 
 ![OpenScale Insight Dashboard Tile Open](doc/source/images/OpenScaleInsightDashTileOpen.png)
 
+Do not worry if the name you see does not match exactly with the screenshot. The deployment name you see will correspond to the variable used in the Jupyter notebook
+
 You will see the triangle with `!` under `Fairness` -> `Sex`. This indicates that there has been an alert for the `Fairness` monitor. Alerts are configurable, based on thresholds for fairness outcomes which can be set and altered as desired.
 
-* By moving your mouse pointer over the graph, you can see the values change, and which contains bias. Click one spot to veiw the details. Later, we'll click `Configure Monitors` to get a Fairness endpoint:
+* By moving your mouse pointer over the graph, you can see the values change, and which contains bias. Click one spot to view the details. Later, we'll click `Configure Monitors` to get a Fairness endpoint:
 
 ![OpenScale Fairness Monitor](doc/source/images/OpenScaleFairnessMonitor.png)
 
