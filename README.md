@@ -125,11 +125,11 @@ For this part of the pattern we're going to configure our Watson OpenScale servi
 
 ### Import the notebook
 
-At the project overview click the Add to project button, and choose Notebook or click New notebook option next to the Notebooks section.
+At the project overview click the `Add to project +` button, and choose `Notebook` or click the `New notebook +` option next to the `Notebooks` section.
 
 ![Add a new asset](doc/source/images/wml-1-add-asset.png)
 
-On the next panel select the From URL tab, give your notebook a name, provide the following URL, and choose the Python 3.6 environment:
+On the next panel select the `From URL` tab, give your notebook a name, provide the following URL, and choose the Python 3.6 environment:
 
 Provide the notebook URL [https://raw.githubusercontent.com/IBM/monitor-ibm-cloud-pak-with-watson-openscale/master/notebooks/ConfigureOpenScale.ipynb](https://raw.githubusercontent.com/IBM/monitor-ibm-cloud-pak-with-watson-openscale/master/notebooks/ConfigureOpenScale.ipynb).
 
