@@ -29,10 +29,10 @@ When the reader has completed this Code Pattern, they will understand how to:
 ## Prerequisites
 
 * [IBM Cloud Pak for Data](https://www.ibm.com/analytics/cloud-pak-for-data)
-* [Watson OpenScale Add-on installed for ICP4D](https://www.ibm.com/support/producthub/icpdata/docs/content/SSQNUZ_current/cpd/svc/openscale/openscale-overview.html)
+* [Watson OpenScale Add-on installed for ICP4D](https://www.ibm.com/support/producthub/icpdata/docs/content/SSQNUZ_current/svc-welcome/aiopenscale.html)
 * [Watson OpenScale configured for ICP4D](https://cloud.ibm.com/docs/services/ai-openscale-icp?topic=ai-openscale-icp-gs-get-started)
 * [Watson Machine Learning Add On for Cloud Pak for Data](https://www.ibm.com/support/producthub/icpdata/docs/content/SSQNUZ_current/wsj/analyze-data/ml-install-overview.html)
-* [Create an IBM Cloud instance of DB2 Warehouse](https://developer.ibm.com/tutorials/virtualizing-db2-warehouse-data-with-data-virtualization/)
+* [Create an IBM Cloud instance of DB2 Warehouse](https://developer.ibm.com/tutorials/virtualizing-db2-warehouse-data-with-data-virtualization/#step-4-set-up-the-db2-warehouse-on-ibm-cloud)
 
 
 # Steps
@@ -52,25 +52,28 @@ cd monitor-ibm-cloud-pak-with-watson-openscale
 ```
 
 ## 2. Create a new project and deployment space
-### Create a New project
+
+### Create a new project
 
 In Cloud Pak for Data, we use the concept of a project to collect / organize the resources used to achieve a particular goal (resources to build a solution to a problem). Your project resources can include data, collaborators, and analytic assets like notebooks and models, etc.
 
-* Go the (☰) menu and click *Projects*
+* Launch a browser and navigate to your Cloud Pak for Data deployment.
+
+* Go the (☰) menu and click *Projects*:
 
 ![(☰) Menu -> Projects](doc/source/images/cpd-projects-menu.png)
 
-* Click on *New project*
+* Click on *New project*. In the dialog that pops up, select the project type as `Analytics project` and click `Next`:
 
 ![Start a new project](doc/source/images/cpd-new-project.png)
 
-* We are going to create an empty project, as opposed to creating one from an existing file. Select the _*Create an empty project*_ option:
+* Click on the top tile for `Create an empty project`:
 
-![Create project from file](doc/source/images/cpd-create-empty-project.png)
+![Create an empty project](doc/source/images/cpd-create-empty-project.png)
 
-* Give the project a name and click `Create`:
+* Give the project a unique name, an optional description and click `Create`:
 
-![Browse for project files](doc/source/images/cpd-new-project-create.png)
+![Pick a name](doc/source/images/cpd-new-project-create.png)
 
 ### Create a Deployment Space
 
@@ -80,31 +83,41 @@ Cloud Pak for Data uses the concept of `Deployment Spaces` to configure and mana
 
 ![(☰) Menu -> Analytics deployments](doc/source/images/ChooseAnalyticsDeployments.png)
 
-* Click on `+ New deployment space`:
+* Click on `New deployment space +`:
 
 ![Add New deployment space](doc/source/images/addNewDeploymentSpace.png)
 
-* Give your deployment space a unique name, optional description, then click `Create`. You will use this space later when you deploy a machine learning model.
+* Click on the top tile for 'Create an empty space':
 
-#### Add collaborator
+![Create empty deployment space](doc/source/images/createEmptyDeploymentSpace.png)
+
+* Give your deployment space a unique name, an optional description, then click `Create`.
+
+![Create New deployment space](doc/source/images/createNewDeploymentSpace.png)
+
+You will use this space later when you deploy a machine learning model.
+
+### Add collaborator
+
 Next, we will add a collaborator to the new deployment space, so that assets we deploy can be monitored in step 4.
 
 * Click on your new deployment space.
 
 ![Select deployment space](doc/source/images/selectNewDeploymentSpace.png)
 
-* Click on the `Access control` tab and then click on `Add collaborators` on the right.
+* Click on the `Access control` tab and then click on `Add collaborators +` on the right.
 
 ![Deployment space access control](doc/source/images/deploymentSpaceAccessControl.png)
 
-* Enter "admin" as a Collaborator and select the user from the drop down list. Then click on the `Add to list` button.
+* Enter "admin" as a Collaborator and select the user from the drop down list. Then click on the `Add to list +` button. Then click the `Add` button to finish adding the collaborator.
 
-> **NOTE:** We are adding the user that configured the machine learning instance for OpenScale monitoring. In this case, the user is the admin user. If the user is someone other than Admin, then that user should be added as a collaborator here
+> **NOTE:** We are adding the user that configured the machine learning instance for OpenScale monitoring. In this case, the user is the admin user. If the user is someone other than "admin", then that user should be added as a collaborator here.
 
-![Deployment space collaborators](doc/source/images/deploymentSpaceAddCollaborator.png)
+![Deployment space add collaborator](doc/source/images/deploymentSpaceAddCollaborator.png)
 
-* Click the `Add` button to finish adding the collaborator. You should be brought back to the deployment space page and see your user ID along with the `Admin` user as collaborators for this space.
+You should be brought back to the deployment space page and see your user ID along with the `admin` user as collaborators for this space.
 
+![Deployment space collaborators](doc/source/images/deploymentSpaceCollaborators.png)
 
 ## 3. Configure OpenScale in a Jupyter Notebook
 
@@ -112,17 +125,15 @@ For this part of the pattern we're going to configure our Watson OpenScale servi
 
 ### Import the notebook
 
-At the project overview, either click the *New Asset* button [1], and choose *Add notebook* or go to the *Notebooks* tab [2] and choose *+ Add notebook* [3].
+At the project overview click the `Add to project +` button, and choose `Notebook` or click the `New notebook +` option next to the `Notebooks` section.
 
 ![Add a new asset](doc/source/images/wml-1-add-asset.png)
 
-On the next panel select the *From URL* tab [1] and give your notebook a name [2].
+On the next panel select the `From URL` tab, give your notebook a name, provide the following URL, and choose the Python 3.6 environment:
 
-Provide the notebook URL [https://raw.githubusercontent.com/IBM/monitor-ibm-cloud-pak-with-watson-openscale/master/notebooks/ConfigureOpenScale.ipynb](https://raw.githubusercontent.com/IBM/monitor-ibm-cloud-pak-with-watson-openscale/master/notebooks/ConfigureOpenScale.ipynb) [3].
+Provide the notebook URL [https://raw.githubusercontent.com/IBM/monitor-ibm-cloud-pak-with-watson-openscale/master/notebooks/ConfigureOpenScale.ipynb](https://raw.githubusercontent.com/IBM/monitor-ibm-cloud-pak-with-watson-openscale/master/notebooks/ConfigureOpenScale.ipynb).
 
-Choose a Python 3.x environment [4], then click *Create* [5].
-
-![Add notebook name and URL](doc/source/images/wml-2-add-name-and-url.png)
+![Add notebook name and URL](doc/source/images/wml-2-add-name-and-url.png) and click `Create notebook`.
 
 When the Jupyter notebook is loaded and the kernel is ready then we can start executing cells.
 
@@ -130,15 +141,19 @@ When the Jupyter notebook is loaded and the kernel is ready then we can start ex
 
 ### Update credentials
 
-* In the notebook section 1.2 you will add your ICP platform credentials.
-* For the `url` field, change `https://w.x.y.z:31843` to use the IP address of your ICP cluster. 
+* In the notebook section 1.2 you will add your ICP platform credentials for the `WOS_CREDENTIALS`.
+* For the `url` field, change `https://w.x.y.z` to use the IP address of your ICP cluster, i.e something like: "url": "https://zen-cpd-zen.omid-cp4d-v5-2bef1f4b4097001da9502000c44fc2b2-0001.us-south.containers.appdomain.cloud"
 * For the `username`, use your login username.
 * For the `password`, user your login password.
 * For the `DATABASE_CREDENTIALS` and `SCHEMA_NAME` values, follow instructions from prerequisites to *Create an IBM Cloud instance of DB2 Warehouse*
 
 ### Run the notebook
 
-Spend an minute looking through the sections of the notebook to get an overview. You will run cells individually by highlighting each cell, then either click the `Run` button at the top of the notebook. While the cell is running, an asterisk (`[*]`) will show up to the left of the cell. When that cell has finished executing a sequential number will show up (for example, `[17]`).
+Important: Make sure that you stop the kernel of your notebook(s) when you are done, in order to prevent leaking of memory resources!
+
+![Stop kernel](doc/source/images/JupyterStopKernel.png)
+
+Spend a minute looking through the sections of the notebook to get an overview. You will run cells individually by highlighting each cell, then either click the `Run` button at the top of the notebook. While the cell is running, an asterisk (`[*]`) will show up to the left of the cell. When that cell has finished executing a sequential number will show up (for example, `[17]`).
 
 ### Get transactions for Explainability
 
@@ -156,15 +171,15 @@ The *Insights Dashboard* provides an overview of the models that OpenScale is mo
 
 ![Deploy OpenScale](doc/source/images/aios-deploy-service.png)
 
-OpenScale will begin with the *Insights Dashboard*. This can contain tiles for many configured monitors. 
-
-* Click on the left-hand menu icon for `Insights`, make sure that you are on the `Model monitors` tab, and then choose the tile for the `GermanCreditRiskModelICP` model (or the 3-dot menu on the tile and then `View Details`:
+* When the dashboard loads, Click on the 'Model Monitors'  tab and you will see the one deployment you configured in the previous section.
 
 ![OpenScale Insight Dashboard Tile Open](doc/source/images/OpenScaleInsightDashTileOpen.png)
 
+Do not worry if the name you see does not match exactly with the screenshot. The deployment name you see will correspond to the variable used in the Jupyter notebook
+
 You will see the triangle with `!` under `Fairness` -> `Sex`. This indicates that there has been an alert for the `Fairness` monitor. Alerts are configurable, based on thresholds for fairness outcomes which can be set and altered as desired.
 
-* By moving your mouse pointer over the graph, you can see the values change, and which contains bias. Click one spot to veiw the details. Later, we'll click `Configure Monitors` to get a Fairness endpoint:
+* By moving your mouse pointer over the graph, you can see the values change, and which contains bias. Click one spot to view the details. Later, we'll click `Configure Monitors` to get a Fairness endpoint:
 
 ![OpenScale Fairness Monitor](doc/source/images/OpenScaleFairnessMonitor.png)
 
