@@ -157,7 +157,7 @@ Spend a minute looking through the sections of the notebook to get an overview. 
 
 ### Get transactions for Explainability
 
-Under `8.9 Identify transactions for Explainability` run the cell. It will produce a series of UIDs for indidvidual ML scoring transactions. Copy one or more of them to examine in the next section.
+Under `8.9 Identify transactions for Explainability` run the cell. It will produce a series of UIDs for individual ML scoring transactions. Copy one or more of them to examine in the next section.
 
 ## 4. Utilize the dashboard for Openscale
 
@@ -171,39 +171,38 @@ The *Insights Dashboard* provides an overview of the models that OpenScale is mo
 
 ![Deploy OpenScale](doc/source/images/aios-deploy-service.png)
 
-* When the dashboard loads, Click on the 'Model Monitors'  tab and you will see the one deployment you configured in the previous section.
+* When the dashboard loads, Click on the `Model Monitors`  tab and you will see the one deployment you configured in the previous section. 
 
 ![OpenScale Insight Dashboard Tile Open](doc/source/images/OpenScaleInsightDashTileOpen.png)
 
 Do not worry if the name you see does not match exactly with the screenshot. The deployment name you see will correspond to the variable used in the Jupyter notebook
 
-You will see the triangle with `!` under `Fairness` -> `Sex`. This indicates that there has been an alert for the `Fairness` monitor. Alerts are configurable, based on thresholds for fairness outcomes which can be set and altered as desired.
+![OpenScale Quality Monitor](doc/source/images/OpenScaleQualityMonitor.png) 
 
-* By moving your mouse pointer over the graph, you can see the values change, and which contains bias. Click one spot to view the details. Later, we'll click `Configure Monitors` to get a Fairness endpoint:
+The quality monitor scans the requests sent to your model deployment \(i.e the payload\) to let you know how well your model predicts outcomes. Quality metrics are calculated hourly, when OpenScale sends manually labeled feedback data set to the deployed model.
 
-![OpenScale Fairness Monitor](doc/source/images/OpenScaleFairnessMonitor.png)
 
-* Once you open the details page, you can see more information. Note that you can choose the radio buttons for your choice of data (Payload + Perturbed, Payload, Training, Debiased):
+* We now have an alert on the Quality of the model.
+* _**Click**_ on the deployment tile to open the details page.  You will see the triangle with `!` under `Quality` -> `Area under ROC`. This indicates that there has been an alert for the `Quality` monitor. Alerts are configurable, based on thresholds for quality outcomes which can be set and altered as desired. 
+* We have set a threshold of 70% and based on the feedback data loaded in the notebook, the model is performing below that threshold.
 
-![OpenScale Fairness Detail](doc/source/images/OpenScaleFairnessDetail.png)
+![GUI Quality area under ROC](doc/source/images/openscale-config-gui-quality-roc.png)
 
-* Click on `View Transactions` to drill deeper. Here you have radio buttons for *All transactions* and *Biased transactions*. Each of the individual transactions can be examined to see them in detail. Doing so will cache that transaction, as we will see later. 
+* Feel free to explore the other quality metrics for the model. **Click** on the geen line \(which represents the quality run we initiated from the Jupyter Notebook\), to view more details for a particular point on the performance graph.
 
-![OpenScale View Transactions](doc/source/images/OpenScaleFairnessViewTransactions.png)
+![GUI Quality ROC details](doc/source/images/openscale-config-gui-quality-roc-details.png)
+
 
 * Now, go back to the *Insights Dashboard* page by clicking on the left-hand menu icon for `Insights`, make sure that you are on the `Model monitors` tab, and click the 3-dot menu on the tile and then `Configure monitors`:
 
 ![OpenScale Configure Monitors](doc/source/images/OpenScaleConfigureMonitors.png)
 
-* Click the `Fairness` menu, then the `Debias Endpoint` tab. This is the REST endpoint that offers a debiased version of the credit risk ML model, based on the features that were configured (i.e. Sex and Age). It will present an inference, or score, that attempts to remove the bias that has been detected:
-
-![OpenScale Monitors Fairness](doc/source/images/OpenScaleMonitorFairness.png)
-
-* Then scroll down for code examples on how to use the Fairness Debiased endpoint. You can see code snippets using cURL, Java, and Python, which can be used in your scripts or applications to access this debiased endpoint:
+* Click the `Endpoints` menu. Select the `Endpoints` tab on the far right-hand side. Select `Debiased transactions` from the dropdown where you see `Payload logging`. This is the REST endpoint that offers a debiased version of the credit risk ML model, based on the features that were configured (i.e. Sex and Age). It will present an inference, or score, that attempts to remove the bias that has been detected:
+* You will see code examples on how to use the Fairness Debiased endpoint. below the `Debiased tranactions` drop-down menu. You can see code snippets using cURL, Java, and Python, which can be used in your scripts or applications to access this debiased endpoint:
 
 ![OpenScale Debiased endpoint](doc/source/images/OpenScaleDebiasedEndpoint.png)
 
-* Similarly, you can choose the `Quality` menu and choose the `Feedback` tab to get code for Feedback Logging. This provides an endpoint for sending fresh test data for ongoing quality evaluation. You can upload feedback data here or work with your developer to integrate the code snippet provided to publish feedback data to your Watson OpenScale database.
+* Similarly, on the same  `Endpoints` tab, you can choose the `Feedback logging` drop-down to get code for Feedback Logging. This provides an endpoint for sending fresh test data for ongoing quality evaluation. You can upload feedback data here or work with your developer to integrate the code snippet provided to publish feedback data to your Watson OpenScale database.
 
 ### Examine an individual transaction
 
@@ -217,15 +216,15 @@ You will see the triangle with `!` under `Fairness` -> `Sex`. This indicates tha
 
 *Explanations show the most significant factors when determining an outcome. Classification models also include advanced explanations. Advanced explanations are not available for regression, image, and unstructured text models.*
 
-* Click on the info icon next to `Minimum changes for No Risk outcome` and look at the feature values:
+* Click on the info icon next to `Minimum changes for another outcome` and look at the feature values:
 
 *Pertinent Negative
-If the feature values were set to these values, the prediction would change. This is the minimum set of changes in feature values to generate a different prediction. Each feature value is changed so that it moves towards its median value in the training data.*
+Pertinent Negatives (PN) are feature values obtained by changing the value of each feature away from its median such that the model prediction changes. If the feeature attributes were set to these values, the prediction would change. This is the minimum set of changes in feature values to generate a different predictioon.*
 
 * Click on the info icon next to `Maximum changes allowed for the same outcome` and look at the feature values:
 
 *Pertinent Positive
-The prediction will not change even if the feature values are set to these values. This is the maximum change allowed while maintaining the existing prediction. Each feature value is changed so that it moves towards its median value in the training data.*
+Pertinent Postives (PP) are feature values obtained by changing the values of each feature towards its median such that thee model preediction remains the same. The prediction does not chang, even if the feature attributes are set to these values. This is the maximum possible change whille maintaining the existing prediction. Each feature value changes so that it moves towards it median value in the training data.*
 
 You can see under `Most important factors influencing prediction` the Feature, Value, and Weight of the most important factors for this score.
 
