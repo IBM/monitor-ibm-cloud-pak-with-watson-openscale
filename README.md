@@ -171,24 +171,24 @@ The *Insights Dashboard* provides an overview of the models that OpenScale is mo
 
 ![Deploy OpenScale](doc/source/images/aios-deploy-service.png)
 
-* When the dashboard loads, Click on the `Model Monitors`  tab and you will see the one deployment you configured in the previous section. 
+* When the dashboard loads, Click on the `Model Monitors`  tab and you will see the one deployment you configured in the previous section.
 
 ![OpenScale Insight Dashboard Tile Open](doc/source/images/OpenScaleInsightDashTileOpen.png)
 
 Do not worry if the name you see does not match exactly with the screenshot. The deployment name you see will correspond to the variable used in the Jupyter notebook
 
-![OpenScale Quality Monitor](doc/source/images/OpenScaleQualityMonitor.png) 
+![OpenScale Quality Monitor](doc/source/images/OpenScaleQualityMonitor.png)
 
 The quality monitor scans the requests sent to your model deployment \(i.e the payload\) to let you know how well your model predicts outcomes. Quality metrics are calculated hourly, when OpenScale sends manually labeled feedback data set to the deployed model.
 
 
 * We now have an alert on the Quality of the model.
-* _**Click**_ on the deployment tile to open the details page.  You will see the triangle with `!` under `Quality` -> `Area under ROC`. This indicates that there has been an alert for the `Quality` monitor. Alerts are configurable, based on thresholds for quality outcomes which can be set and altered as desired. 
+* _**Click**_ on the deployment tile to open the details page.  You will see the triangle with `!` under `Quality` -> `Area under ROC`. This indicates that there has been an alert for the `Quality` monitor. Alerts are configurable, based on thresholds for quality outcomes which can be set and altered as desired.
 * We have set a threshold of 70% and based on the feedback data loaded in the notebook, the model is performing below that threshold.
 
 ![GUI Quality area under ROC](doc/source/images/openscale-config-gui-quality-roc.png)
 
-* Feel free to explore the other quality metrics for the model. **Click** on the geen line \(which represents the quality run we initiated from the Jupyter Notebook\), to view more details for a particular point on the performance graph.
+* Feel free to explore the other quality metrics for the model. **Click** on the green line \(which represents the quality run we initiated from the Jupyter Notebook\), to view more details for a particular point on the performance graph.
 
 ![GUI Quality ROC details](doc/source/images/openscale-config-gui-quality-roc-details.png)
 
@@ -198,7 +198,7 @@ The quality monitor scans the requests sent to your model deployment \(i.e the p
 ![OpenScale Configure Monitors](doc/source/images/OpenScaleConfigureMonitors.png)
 
 * Click the `Endpoints` menu. Select the `Endpoints` tab on the far right-hand side. Select `Debiased transactions` from the dropdown where you see `Payload logging`. This is the REST endpoint that offers a debiased version of the credit risk ML model, based on the features that were configured (i.e. Sex and Age). It will present an inference, or score, that attempts to remove the bias that has been detected:
-* You will see code examples on how to use the Fairness Debiased endpoint. below the `Debiased tranactions` drop-down menu. You can see code snippets using cURL, Java, and Python, which can be used in your scripts or applications to access this debiased endpoint:
+* You will see code examples on how to use the Fairness Debiased endpoint. below the `Debiased transactions` drop-down menu. You can see code snippets using cURL, Java, and Python, which can be used in your scripts or applications to access this debiased endpoint:
 
 ![OpenScale Debiased endpoint](doc/source/images/OpenScaleDebiasedEndpoint.png)
 
@@ -206,7 +206,7 @@ The quality monitor scans the requests sent to your model deployment \(i.e the p
 
 ### Examine an individual transaction
 
-* Click on the left-hand menu icon for `Explain a transaction` and click one of the transactions that have been run. These are the transactions that have been cached. Alternately, enter the transaction UID you copied after running  the notebook from [step 3.](#3-configure-openscale-in-a-jupyter-notebook) 
+* Click on the left-hand menu icon for `Explain a transaction` and click one of the transactions that have been run. These are the transactions that have been cached. Alternately, enter the transaction UID you copied after running  the notebook from [step 3.](#3-configure-openscale-in-a-jupyter-notebook)
 
 > NOTE: Each time you create the Explainibility data, the perterbation algorithm is sending 1000's of requests to the deployed Machine Learning REST endpoint, so the first time this is done can take a few seconds.
 
