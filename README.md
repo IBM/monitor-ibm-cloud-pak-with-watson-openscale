@@ -144,8 +144,9 @@ When the Jupyter notebook is loaded and the kernel is ready then we can start ex
 * In the notebook section 1.2 you will add your ICP platform credentials for the `WOS_CREDENTIALS`.
 * For the `url` field, change `https://w.x.y.z` to use the IP address of your ICP cluster, i.e., something like: "url": "https://zen-cpd-zen.omid-cp4d-v5-2bef1f4b4097001da9502000c44fc2b2-0001.us-south.containers.appdomain.cloud"
 * For the `username`, use your login username.
-* For the `password`, user your login password.
+* For the `password`, use your login password.
 * For the `DATABASE_CREDENTIALS` and `SCHEMA_NAME` values, follow instructions from prerequisites to *Create an IBM Cloud instance of DB2 Warehouse*
+* For the `CUSTOM_NAME`, provide a custom value that will be concatenated to "_MODEL", "_DEPLOYMENT" and "_MONITOR" to generate the names for your model, deployment and open scale monitor.
 
 ### Run the notebook
 
