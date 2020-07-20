@@ -4,14 +4,14 @@ In this Code Pattern, we will use German Credit data to train, create, and deplo
 
 When the reader has completed this Code Pattern, they will understand how to:
 
-* Create and deploy a machine learning model using the Watson Machine Learning service on IBM Cloud Pak for Data (ICP4D).
+* Create and deploy a machine learning model using the Watson Machine Learning service on IBM Cloud Pak for Data (ICP4D)
 * Setup Watson OpenScale Data Mart
 * Bind Watson Machine Learning to the Watson OpenScale Data Mart
 * Add subscriptions to the Data Mart
 * Enable payload logging and performance monitor for subscribed assets
 * Enable Quality (Accuracy) monitor
 * Enable Fairness monitor
-* Score the German credit model using the Watson Machine Learning
+* Score the German credit model using the Watson Machine Learning service
 * Insert historic payloads, fairness metrics, and quality metrics into the Data Mart
 * Use Data Mart to access tables data via subscription
 
@@ -19,7 +19,7 @@ When the reader has completed this Code Pattern, they will understand how to:
 
 ## Flow
 
-1. Create a new project on ICP4D
+1. Create a new project on ICP4D.
 1. The developer creates a Jupyter Notebook within this project.
 1. OpenScale on ICP4D is connected to a DB2 database, which is used to store Watson OpenScale data.
 1. The notebook is connected to Watson Machine Learning and a model is trained and deployed.
@@ -142,10 +142,11 @@ When the Jupyter notebook is loaded and the kernel is ready then we can start ex
 ### Update credentials
 
 * In the notebook section 1.2 you will add your ICP platform credentials for the `WOS_CREDENTIALS`.
-* For the `url` field, change `https://w.x.y.z` to use the IP address of your ICP cluster, i.e something like: "url": "https://zen-cpd-zen.omid-cp4d-v5-2bef1f4b4097001da9502000c44fc2b2-0001.us-south.containers.appdomain.cloud"
+* For the `url` field, change `https://w.x.y.z` to use the IP address of your ICP cluster, i.e., something like: "url": "https://zen-cpd-zen.omid-cp4d-v5-2bef1f4b4097001da9502000c44fc2b2-0001.us-south.containers.appdomain.cloud"
 * For the `username`, use your login username.
-* For the `password`, user your login password.
+* For the `password`, use your login password.
 * For the `DATABASE_CREDENTIALS` and `SCHEMA_NAME` values, follow instructions from prerequisites to *Create an IBM Cloud instance of DB2 Warehouse*
+* For the `CUSTOM_NAME`, provide a custom value that will be concatenated to "_MODEL", "_DEPLOYMENT" and "_MONITOR" to generate the names for your model, deployment and open scale monitor.
 
 ### Run the notebook
 
@@ -153,11 +154,11 @@ Important: Make sure that you stop the kernel of your notebook(s) when you are d
 
 ![Stop kernel](doc/source/images/JupyterStopKernel.png)
 
-Spend a minute looking through the sections of the notebook to get an overview. You will run cells individually by highlighting each cell, then either click the `Run` button at the top of the notebook. While the cell is running, an asterisk (`[*]`) will show up to the left of the cell. When that cell has finished executing a sequential number will show up (for example, `[17]`).
+Spend a minute looking through the sections of the notebook to get an overview. You will run cells individually by highlighting each cell, then either click the `Run` button at the top of the notebook or hitting the keyboard short cut to run the cell (Shift + Enter but can vary based on platform). While the cell is running, an asterisk (`[*]`) will show up to the left of the cell. When that cell has finished executing a sequential number will show up (for example, `[17]`).
 
 ### Get transactions for Explainability
 
-Under `8.9 Identify transactions for Explainability` run the cell. It will produce a series of UIDs for indidvidual ML scoring transactions. Copy one or more of them to examine in the next section.
+Under `8.9 Identify transactions for Explainability` run the cell. It will produce a series of UIDs for individual ML scoring transactions. Copy one or more of them to examine in the next section.
 
 ## 4. Utilize the dashboard for Openscale
 
@@ -171,43 +172,42 @@ The *Insights Dashboard* provides an overview of the models that OpenScale is mo
 
 ![Deploy OpenScale](doc/source/images/aios-deploy-service.png)
 
-* When the dashboard loads, Click on the 'Model Monitors'  tab and you will see the one deployment you configured in the previous section.
+* When the dashboard loads, Click on the `Model Monitors`  tab and you will see the one deployment you configured in the previous section.
 
 ![OpenScale Insight Dashboard Tile Open](doc/source/images/OpenScaleInsightDashTileOpen.png)
 
 Do not worry if the name you see does not match exactly with the screenshot. The deployment name you see will correspond to the variable used in the Jupyter notebook
 
-You will see the triangle with `!` under `Fairness` -> `Sex`. This indicates that there has been an alert for the `Fairness` monitor. Alerts are configurable, based on thresholds for fairness outcomes which can be set and altered as desired.
+![OpenScale Quality Monitor](doc/source/images/OpenScaleQualityMonitor.png)
 
-* By moving your mouse pointer over the graph, you can see the values change, and which contains bias. Click one spot to view the details. Later, we'll click `Configure Monitors` to get a Fairness endpoint:
+The quality monitor scans the requests sent to your model deployment \(i.e., the payload\) to let you know how well your model predicts outcomes. Quality metrics are calculated hourly, when OpenScale sends manually labeled feedback to the deployed model.
 
-![OpenScale Fairness Monitor](doc/source/images/OpenScaleFairnessMonitor.png)
 
-* Once you open the details page, you can see more information. Note that you can choose the radio buttons for your choice of data (Payload + Perturbed, Payload, Training, Debiased):
+* We now have an alert on the Quality of the model.
+* _**Click**_ on the deployment tile to open the details page.  You will see the triangle with `!` under `Quality` -> `Area under ROC`. This indicates that there has been an alert for the `Quality` monitor. Alerts are configurable, based on thresholds for quality outcomes which can be set and altered as desired.
+* We have set a threshold of 70% and based on the feedback data loaded in the notebook, the model is performing below that threshold.
 
-![OpenScale Fairness Detail](doc/source/images/OpenScaleFairnessDetail.png)
+![GUI Quality area under ROC](doc/source/images/openscale-config-gui-quality-roc.png)
 
-* Click on `View Transactions` to drill deeper. Here you have radio buttons for *All transactions* and *Biased transactions*. Each of the individual transactions can be examined to see them in detail. Doing so will cache that transaction, as we will see later. 
+* Feel free to explore the other quality metrics for the model. **Click** on the green line \(which represents the quality run we initiated from the Jupyter Notebook\), to view more details for a particular point on the performance graph.
 
-![OpenScale View Transactions](doc/source/images/OpenScaleFairnessViewTransactions.png)
+![GUI Quality ROC details](doc/source/images/openscale-config-gui-quality-roc-details.png)
+
 
 * Now, go back to the *Insights Dashboard* page by clicking on the left-hand menu icon for `Insights`, make sure that you are on the `Model monitors` tab, and click the 3-dot menu on the tile and then `Configure monitors`:
 
 ![OpenScale Configure Monitors](doc/source/images/OpenScaleConfigureMonitors.png)
 
-* Click the `Fairness` menu, then the `Debias Endpoint` tab. This is the REST endpoint that offers a debiased version of the credit risk ML model, based on the features that were configured (i.e. Sex and Age). It will present an inference, or score, that attempts to remove the bias that has been detected:
-
-![OpenScale Monitors Fairness](doc/source/images/OpenScaleMonitorFairness.png)
-
-* Then scroll down for code examples on how to use the Fairness Debiased endpoint. You can see code snippets using cURL, Java, and Python, which can be used in your scripts or applications to access this debiased endpoint:
+* Click the `Endpoints` menu. Select the `Endpoints` tab on the far right-hand side. Select `Debiased transactions` from the dropdown where you see `Payload logging`. This is the REST endpoint that offers a debiased version of the credit risk ML model, based on the features that were configured (i.e., Sex and Age). It will present an inference, or score, that attempts to remove the bias that has been detected.
+* You will see code examples on how to use the Fairness Debiased endpoint below the `Debiased transactions` drop-down menu. You can see code snippets using cURL, Java, and Python, which can be used in your scripts or applications to access this debiased endpoint:
 
 ![OpenScale Debiased endpoint](doc/source/images/OpenScaleDebiasedEndpoint.png)
 
-* Similarly, you can choose the `Quality` menu and choose the `Feedback` tab to get code for Feedback Logging. This provides an endpoint for sending fresh test data for ongoing quality evaluation. You can upload feedback data here or work with your developer to integrate the code snippet provided to publish feedback data to your Watson OpenScale database.
+* Similarly, on the same  `Endpoints` tab, you can choose the `Feedback logging` drop-down to get code for Feedback Logging. This provides an endpoint for sending fresh test data for ongoing quality evaluation. You can upload feedback data here or work with your developer to integrate the code snippet provided to publish feedback data to your Watson OpenScale database.
 
 ### Examine an individual transaction
 
-* Click on the left-hand menu icon for `Explain a transaction` and click one of the transactions that have been run. These are the transactions that have been cached. Alternately, enter the transaction UID you copied after running  the notebook from [step 3.](#3-configure-openscale-in-a-jupyter-notebook) 
+* Click on the left-hand menu icon for `Explain a transaction` and click one of the transactions that have been run. These are the transactions that have been cached. Alternately, enter the transaction UID you copied after running  the notebook from [step 3.](#3-configure-openscale-in-a-jupyter-notebook)
 
 > NOTE: Each time you create the Explainibility data, the perterbation algorithm is sending 1000's of requests to the deployed Machine Learning REST endpoint, so the first time this is done can take a few seconds.
 
@@ -217,15 +217,15 @@ You will see the triangle with `!` under `Fairness` -> `Sex`. This indicates tha
 
 *Explanations show the most significant factors when determining an outcome. Classification models also include advanced explanations. Advanced explanations are not available for regression, image, and unstructured text models.*
 
-* Click on the info icon next to `Minimum changes for No Risk outcome` and look at the feature values:
+* Click on the info icon next to `Minimum changes for another outcome` and look at the feature values:
 
-*Pertinent Negative
-If the feature values were set to these values, the prediction would change. This is the minimum set of changes in feature values to generate a different prediction. Each feature value is changed so that it moves towards its median value in the training data.*
+*Pertinent Negative<br/>
+Pertinent Negatives (PN) are feature values obtained by changing the value of each feature away from its median such that the model prediction changes. If the feature attributes were set to these values, the prediction would change. This is the minimum set of changes in feature values to generate a different prediction.*
 
 * Click on the info icon next to `Maximum changes allowed for the same outcome` and look at the feature values:
 
-*Pertinent Positive
-The prediction will not change even if the feature values are set to these values. This is the maximum change allowed while maintaining the existing prediction. Each feature value is changed so that it moves towards its median value in the training data.*
+*Pertinent Positive<br/>
+Pertinent Postives (PP) are feature values obtained by changing the values of each feature towards its median such that the model prediction remains the same. The prediction does not change, even if the feature attributes are set to these values. This is the maximum possible change while maintaining the existing prediction. Each feature value changes so that it moves towards its median value in the training data.*
 
 You can see under `Most important factors influencing prediction` the Feature, Value, and Weight of the most important factors for this score.
 
